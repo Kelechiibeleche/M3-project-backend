@@ -3,6 +3,8 @@ const userModel = require("../models/User.model");
 const router = require("express").Router();
 
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { isAuthenticated } = require("../middlewares/jwt.middleware");
 // sign up
 
 router.post("/signup", async (req, res) => {
@@ -28,10 +30,10 @@ router.post("/signup", async (req, res) => {
         ...req.body,
         password: hashedPassword,
       });
-      //finding user by just their user name alone
+      //finding user by just their ID alone
       const foundUser = await userModel
         .findById(createdUser._id)
-        .select("name");
+        .select("username");
 
       res.status(201).json(foundUser);
     }
@@ -48,13 +50,35 @@ router.post("/login", async (req, res) => {
     if (!foundUser) {
       res.status(403).json({ errorMessage: "Invalid Credentials" });
     } else {
-      console.log(foundUser);
+      const doesPasswordMatch = bcryptjs.compareSync(
+        req.body.password,
+        foundUser.password
+      );
+      if (doesPasswordMatch) {
+        const theDataInToken = { _id: foundUser._id };
+        const authToken = jwt.sign(theDataInToken, process.env.TOKEN_SECRET, {
+          algorithm: "HS256",
+          expiresIn: "6D",
+        });
 
-      res.status(200).json({ message: "Welcome back!" });
+        res
+          .status(200)
+          .json({ message: "Welcome back!", authToken: authToken });
+      } else {
+        res.status(403).json({ errorMessage: "Invalid Credentials" });
+      }
+      console.log("does password match", doesPasswordMatch);
     }
   } catch (error) {
     console.log(error);
   }
+});
+
+// verify that checks authToken with middleware
+router.get("/verify", isAuthenticated, async (req, res) => {
+  res
+    .status(200)
+    .json({ message: "Token verified!", currentUser: req.payload });
 });
 
 module.exports = router;
