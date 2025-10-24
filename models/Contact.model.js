@@ -18,6 +18,14 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
+
+    image: String,
+
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,
