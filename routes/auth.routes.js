@@ -8,6 +8,15 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware");
 // sign up
 
 router.post("/signup", async (req, res) => {
+  const regex =
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{6,}$/;
+
+  if (!regex.test(req.body.password)) {
+    return res.status(403).json({
+      errorMessage: "Password too weak",
+    });
+  }
+
   try {
     //if email exists in DB
     const foundUserWithEmail = await userModel.findOne({
@@ -79,6 +88,16 @@ router.get("/verify", isAuthenticated, async (req, res) => {
   res
     .status(200)
     .json({ message: "Token verified!", currentUser: req.payload });
+});
+
+router.get("/profile/:userId", async (req, res) => {
+  try {
+    const userDataInDB = await userModel.findById(req.params.userId);
+    res.status(200).json(userDataInDB);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
 });
 
 module.exports = router;

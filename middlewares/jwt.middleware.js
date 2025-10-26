@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 function isAuthenticated(req, res, next) {
+  console.log("---- VERIFY REQUEST ----");
+  console.log("Headers received:", req.headers.authorization);
+
   if (
     req.headers.authorization &&
     req.headers.authorization.split(" ")[0] === "Bearer" &&
