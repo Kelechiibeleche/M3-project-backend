@@ -5,11 +5,12 @@ const router = require("express").Router();
 // CRUD
 //read all
 
-router.get("/all-contacts", async (req, res, next) => {
+router.get("/all-contacts/:userId", async (req, res, next) => {
   try {
     const allContactsInDB = await contactModel
-      .find()
+      .find({ creator: req.params.userId })
       .populate("creator", "username_id");
+    console.log(allContactsInDB);
     res.status(200).json(allContactsInDB);
   } catch (error) {
     console.log(error);
@@ -32,9 +33,11 @@ router.get("/single-contact/:contactId", async (req, res) => {
 //create
 
 router.post("/create-a-contact", async (req, res) => {
+  console.log(req.body);
   try {
     const createdContact = await contactModel.create(req.body);
     console.log("contact created successfully", createdContact);
+    res.status(201).json(createdContact);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
