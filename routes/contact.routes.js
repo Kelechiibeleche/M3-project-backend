@@ -23,6 +23,7 @@ router.get("/all-contacts/:userId", async (req, res, next) => {
 router.get("/single-contact/:contactId", async (req, res) => {
   try {
     const oneContact = await contactModel.findById(req.params.contactId);
+    console.log(req.params.contactId, oneContact);
     res.status(200).json(oneContact);
   } catch (error) {
     console.log(error);

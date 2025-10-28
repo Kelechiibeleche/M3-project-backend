@@ -3,7 +3,7 @@ require("dotenv").config();
 // Import models
 const userModel = require("./models/User.model");
 const contactModel = require("./models/Contact.model");
-const categoryModel = require("./models/Category.model");
+const categoryModel = require("./models/Note.model");
 
 // Connects to the database
 require("./db");
@@ -33,8 +33,8 @@ app.use("/auth", authRoutes);
 const contactRoutes = require("./routes/contact.routes");
 app.use("/contact", contactRoutes);
 
-const categoryRoutes = require("./routes/category.routes");
-app.use("/category", categoryRoutes);
+const noteRoutes = require("./routes/notes.routes");
+app.use("/notes", noteRoutes);
 
 require("./error-handling")(app);
 
