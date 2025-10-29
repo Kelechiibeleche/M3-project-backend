@@ -8,7 +8,7 @@ router.post("/add-note/:contactId", async (req, res) => {
     const newNote = await noteModel.create({
       content: req.body.content,
       contact: req.params.contactId,
-      creator: req.body.creator, // You can later replace this with req.payload._id if using JWT
+      creator: req.body.creator,
     });
     res.status(201).json(newNote);
   } catch (error) {
