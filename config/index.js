@@ -33,7 +33,7 @@ module.exports = (app) => {
     cors({
       origin: function (origin, callback) {
         if (!origin) return callback(null, true); // Allow requests with no origin
-        const allowed = ["https://your-site-name.netlify.app"];
+        const allowed = ["https://rolocloud.netlify.app"];
         if (allowed.includes(origin)) return callback(null, true);
         return callback(new Error("Not allowed by CORS"));
       },
