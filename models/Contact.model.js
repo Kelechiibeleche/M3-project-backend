@@ -21,6 +21,12 @@ const contactSchema = new Schema(
 
     image: String,
 
+    category: {
+      type: String,
+      required: true,
+      enum: ["Family", "Friend", "Colleague", "Business", "Other"],
+    },
+
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
