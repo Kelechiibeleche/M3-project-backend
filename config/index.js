@@ -22,10 +22,22 @@ module.exports = (app) => {
   app.set("trust proxy", 1);
 
   // controls a very specific header to pass headers from the frontend
-  app.use(
+  /* app.use(
     cors({
       credentials: true,
       origin: [FRONTEND_URL]
+    })
+  ); */
+
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin) return callback(null, true); // Allow requests with no origin
+        const allowed = ["https://your-site-name.netlify.app"];
+        if (allowed.includes(origin)) return callback(null, true);
+        return callback(new Error("Not allowed by CORS"));
+      },
+      credentials: true,
     })
   );
 
